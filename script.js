@@ -1,64 +1,73 @@
-const form = document.querySelector("form");
-const username = document.querySelector("input[type=text]");
-const email = document.querySelector("input[type=email]");
-const password = document.querySelector("input[type=password]");
-const age = document.querySelector("input[type=number]");
-const hobbies = document.querySelector("#hobbies");
-const gender = document.querySelector("#gender");
+const form = document.querySelector("#registrationForm");
+const username = document.querySelector("#username");
+const email = document.querySelector("#email");
+const password = document.querySelector("#password");
+const age = document.querySelector("#age");
 const country = document.querySelector("#country");
 
 form.addEventListener("submit", (e) => {
+    e.preventDefault(); 
+
+   
     if (!username.value.trim()) {
-        e.preventDefault();
         alert("İstifadəçi adı mütləq doldurulmalıdır!");
+        username.focus();
         return;
     }
 
-    if (!email.value.trim() || !email.value.trim().includes("@")) {
-        e.preventDefault();
+   
+    if (!email.value.trim() || !email.value.includes("@")) {
         alert("Düzgün email ünvanı daxil edin!");
+        email.focus();
         return;
     }
 
-    if (!password.value.trim() || password.value.length < 6) {
-        e.preventDefault();
+    if (password.value.trim().length < 6) {
         alert("Şifrə ən azı 6 simvoldan ibarət olmalıdır!");
+        password.focus();
         return;
     }
 
-    if (!age.value.trim() || Number(age.value.trim()) < 18) {
-        e.preventDefault();
+   
+    const ageValue = Number(age.value.trim());
+    if (!age.value.trim() || ageValue < 18) {
         alert("Yaş mütləq qeyd olunmalı və 18-dən kiçik olmamalıdır!");
-        return;
-    }
-
-    if (!hobbies.value.trim()) {
-        e.preventDefault();
-        alert("Hobbilər xanası mütləq doldurulmalıdır!");
-        return;
-    }
-
-    if (!gender.value.trim()) {
-        e.preventDefault();
-        alert("Cinsiyyət xanası mütləq doldurulmalıdır!");
-        return;
-    }
-
-    if (!country.value.trim()) {
-        e.preventDefault();
-        alert("Ölkə xanası mütləq doldurulmalıdır!");
+        age.focus();
         return;
     }
 
     
-    const obj = {
+    const selectedGender = document.querySelector("input[name='gender']:checked");
+    if (!selectedGender) {
+        alert("Cinsiyyət mütləq seçilməlidir (Qadın və ya Kişi)!");
+        return;
+    }
+
+    
+    const selectedHobbies = Array.from(document.querySelectorAll("input[name='hobbies']:checked"))
+                                 .map(el => el.value);
+    if (selectedHobbies.length === 0) {
+        alert("Ən azı bir hobbi seçilməlidir!");
+        return;
+    }
+
+    
+    if (!country.value.trim()) {
+        alert("Ölkə xanası mütləq doldurulmalıdır!");
+        country.focus();
+        return;
+    }
+
+   
+    const userData = {
         username: username.value.trim(),
         email: email.value.trim(),
         password: password.value.trim(),
-        hobbies: hobbies.value.trim(),
-        gender: gender.value.trim(),
+        age: ageValue,
+        gender: selectedGender.value,
+        hobbies: selectedHobbies,
         country: country.value.trim()
     };
-    
-    console.log(obj);
+
+    console.log("Qeydiyyat uğurla tamamlandı:", userData);
 });
